@@ -24,6 +24,7 @@ const addNewTask = () => {
       id: Date.now(),
       name: name.value,
       description: description.value,
+      dateСreation: new Date(),
     }
     emit('addTask', result)
     name.value = ''

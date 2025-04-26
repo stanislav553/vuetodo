@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Todo } from '@/types/todoTypes'
+import type { Todo, TodoWithoutDate } from '@/types/todoTypes'
 import BaseButton from './UI/BaseButton.vue'
 import { ref } from 'vue'
 import BaseInput from './UI/BaseInput.vue'
@@ -19,8 +19,8 @@ const toggleEditMode = () => {
 }
 
 const emit = defineEmits<{
-  (e: 'changeTaskData', payload: Todo): void
-  (e: 'delete', payload: Todo): void
+  changeTaskData: [payload: TodoWithoutDate]
+  delete: [payload: number]
 }>()
 
 const saveTask = () => {
@@ -36,6 +36,12 @@ const saveTask = () => {
 
 <template>
   <div class="item">
+    <div class="item-data">
+      {{
+        `${props.todoItem.dateСreation.getFullYear()}-${props.todoItem.dateСreation.getMonth() + 1}-${props.todoItem.dateСreation.getDate()}`
+      }}
+    </div>
+
     <div v-if="editTask" class="item__edit-form">
       <div class="item__inputs">
         <BaseInput v-model="newNameTask" />
@@ -43,7 +49,6 @@ const saveTask = () => {
       </div>
       <div class="item__edit-buttons">
         <BaseButton @click="saveTask">Save</BaseButton>
-
         <BaseButton @click="toggleEditMode">Cancel</BaseButton>
       </div>
     </div>
@@ -56,7 +61,7 @@ const saveTask = () => {
 
       <div class="item__actions">
         <BaseButton @click="toggleEditMode">Edit</BaseButton>
-        <BaseButton @click="$emit('delete', props.todoItem)">Delete</BaseButton>
+        <BaseButton @click="$emit('delete', props.todoItem.id)">Delete</BaseButton>
       </div>
     </div>
   </div>
@@ -71,6 +76,11 @@ const saveTask = () => {
   display: flex;
   flex-direction: column;
   gap: 20px;
+
+  &-data {
+    font-size: 25px;
+    text-align: left;
+  }
 
   &__content {
     display: flex;
