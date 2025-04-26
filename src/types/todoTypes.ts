@@ -4,5 +4,4 @@ export interface Todo {
   description: string
   dateСreation: Date
 }
-
 export type TodoWithoutDate = Omit<Todo, 'dateСreation'>
