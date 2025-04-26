@@ -9,13 +9,18 @@ const props = defineProps<{
 
 <template>
   <div class="list">
-    <TaskItem v-for="todoItem in props.todoList" :todoItem :key="todoItem.id" />
+    <TaskItem
+      v-for="todoItem in props.todoList"
+      @delete="$emit('remove', todoItem)"
+      @changeTaskData="(task) => $emit('changeTaskData', task)"
+      :todoItem
+      :key="todoItem.id"
+    />
   </div>
 </template>
 
 <style scoped lang="scss">
 .list {
-  max-height: 250px;
   height: 100%;
   overflow: auto;
 }

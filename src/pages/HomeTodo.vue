@@ -13,6 +13,19 @@ const todoList = ref<Todo[]>([
 const addTask = (task: Todo) => {
   todoList.value.push(task)
 }
+
+const deleteTask = (task: Todo) => {
+  todoList.value = todoList.value.filter((el) => el.id !== task.id)
+}
+
+const changeTaskData = (newData: Todo) => {
+  todoList.value = todoList.value.map(
+    (task): Todo =>
+      task.id === newData.id
+        ? { ...task, id: newData.id, description: newData.description, name: newData.name }
+        : task,
+  )
+}
 </script>
 
 <template>
@@ -20,7 +33,7 @@ const addTask = (task: Todo) => {
     <div class="todo-content">
       <h1 class="todo-title">Список дел</h1>
       <TodoForm @addTask="addTask" />
-      <TasksList :todoList />
+      <TasksList @remove="deleteTask" @changeTaskData="changeTaskData" :todoList />
     </div>
   </div>
 </template>
@@ -36,10 +49,13 @@ const addTask = (task: Todo) => {
     width: 100%;
     border-radius: 20px;
     padding: 30px 20px;
-    border: 2px solid hwb(0 30% 26%);
-    height: 90vh;
+    border: 2px solid hsl(0, 45.8333333333%, 52%);
+    height: 100%;
     overflow: hidden;
     text-align: center;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
   }
   &-title {
     font-size: 68px;

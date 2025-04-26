@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, useTemplateRef } from 'vue'
 import BaseButton from './UI/BaseButton.vue'
 import BaseInput from './UI/BaseInput.vue'
 import type { Todo } from '@/types/todoTypes'
@@ -11,13 +11,14 @@ const emit = defineEmits<{
 const name = ref('')
 const description = ref('')
 
-const nameInputRef = ref<HTMLElement | null>(null)
+const nameInputRef = useTemplateRef<InstanceType<typeof BaseInput>>('nameInputRef')
+
+const descriptionInputRef = useTemplateRef<InstanceType<typeof BaseInput>>('descriptionInputRef')
 
 const addNewTask = () => {
-  if (!name.value.length || !description.value.length) {
-    if (!name.value.length) {
-      nameInputRef.value.focus()
-    }
+  if (!name.value || !description.value) {
+    const inputRef = !name.value ? nameInputRef : descriptionInputRef
+    inputRef.value?.inputRef?.focus()
   } else {
     const result: Todo = {
       id: Date.now(),
@@ -37,7 +38,9 @@ const addNewTask = () => {
 
     <div class="form-todo-content">
       <div class="form-todo-top">Имя задачи: <BaseInput ref="nameInputRef" v-model="name" /></div>
-      <div class="form-todo-bottom">Определение: <BaseInput v-model="description" /></div>
+      <div class="form-todo-bottom">
+        Определение: <BaseInput ref="descriptionInputRef" v-model="description" />
+      </div>
     </div>
     <BaseButton type="submit">Создать задачу</BaseButton>
   </form>
